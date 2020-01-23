@@ -1,5 +1,5 @@
-FROM openjdk:8-jdk
-COPY target/*.jar  /opt/demo.jar
-COPY src/main/resources/application.properties /opt/application.properties
+FROM openjdk:8-jre-alpine
+WORKDIR /home/demo
+COPY target/*.jar  demo.jar
 EXPOSE 7080
-CMD /opt/demo.jar
+ENTRYPOINT ["java","-jar","demo.jar"]
