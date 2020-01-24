@@ -33,9 +33,7 @@ public class AgreementDTO {
         this.productId = builder.productId;
         this.amount = builder.amount;
         this.startDate = builder.startDate;
-//        this.timestamp = LocalDateTime.now().toString();
         this.timestamp = builder.timestamp;
-//        this.timestamp = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
     }
 
     public Integer getAgreementId() {
