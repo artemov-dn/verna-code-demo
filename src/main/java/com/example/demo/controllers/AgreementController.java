@@ -100,19 +100,4 @@ public class AgreementController {
         return new ResponseEntity(result, HttpStatus.OK);
     }
 
-    /**
-     * Возвращает статистику по договорам
-     * @param clientId  ИД клиента
-     * @param productId  ИД продукта
-     * @return список договоров
-     */
-    @RequestMapping(value = "/statistics", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity getStatistics(@RequestParam(value = "clientId", required = false) Integer clientId,
-                                        @RequestParam(value = "productId", required = false) Integer productId) {
-        logger.info("GET ../rest/statistics");
-        StatisticDTO result = agreementService.getStatistics(clientId, productId);
-        return new ResponseEntity(result, HttpStatus.OK);
-    }
-
 }
