@@ -62,8 +62,8 @@ public class AgreementService {
             return new ArrayList<AgreementDTO>(agreements.values());
         } else {
             return agreements.values().parallelStream()
-                    .filter(dto -> (clientId == null || dto.getClientId() == clientId))
-                    .filter(dto -> (productId == null || dto.getProductId() == productId))
+                    .filter(dto -> (clientId == null || dto.getClientId().equals(clientId)))
+                    .filter(dto -> (productId == null || dto.getProductId().equals(productId)))
                     .collect(Collectors.toList());
         }
     }
@@ -106,10 +106,10 @@ public class AgreementService {
     public StatisticDTO getStatistics(Integer clientId, Integer productId){
         Stream<AgreementDTO> stream = agreements.values().parallelStream();
         if (clientId != null) {
-            stream = stream.filter(dto -> (clientId == null || dto.getClientId() == clientId));
+            stream = stream.filter(dto -> (dto.getClientId().equals(clientId)));
         }
-        if (productId == null) {
-            stream = stream.filter(dto -> (productId == null || dto.getProductId() == productId));
+        if (productId != null) {
+            stream = stream.filter(dto -> (dto.getProductId().equals(productId)));
         }
         return stream.map(dto ->
                         new StatisticDTO.Builder().count(1)
