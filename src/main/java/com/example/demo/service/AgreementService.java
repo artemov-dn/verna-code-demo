@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.AgreementDTO;
 import com.example.demo.dto.StatisticDTO;
-import com.example.demo.entity.Agreement;
+import com.example.demo.dto.NewAgreementDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,19 +28,19 @@ public class AgreementService {
 
     /**
      * Добавляет договор
-     * @param agreement новый договор
+     * @param newAgreementDTO новый договор
      * @return добавленный договор
      */
-    public AgreementDTO addAgreement(Agreement agreement){
-        if (agreement != null && agreement.getClientId() != null && agreement.getProductId() != null &&
-                agreement.getAmount() != null && agreement.getStartDate() != null &&
-                agreement.getAmount().compareTo(new BigDecimal(0)) > 0) {
+    public AgreementDTO addAgreement(NewAgreementDTO newAgreementDTO){
+        if (newAgreementDTO != null && newAgreementDTO.getClientId() != null && newAgreementDTO.getProductId() != null &&
+                newAgreementDTO.getAmount() != null && newAgreementDTO.getStartDate() != null &&
+                newAgreementDTO.getAmount().compareTo(new BigDecimal(0)) > 0) {
             AgreementDTO result = new AgreementDTO.Builder()
                     .agreementId(LastAgreementId.addAndGet(1))
-                    .clientId(agreement.getClientId())
-                    .productId(agreement.getProductId())
-                    .amount(agreement.getAmount())
-                    .startDate(agreement.getStartDate())
+                    .clientId(newAgreementDTO.getClientId())
+                    .productId(newAgreementDTO.getProductId())
+                    .amount(newAgreementDTO.getAmount())
+                    .startDate(newAgreementDTO.getStartDate())
                     .timestamp(Calendar.getInstance().getTime())
                     .build();
             agreements.put(result.getAgreementId(), result);

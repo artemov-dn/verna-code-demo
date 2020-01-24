@@ -1,8 +1,7 @@
 package com.example.demo.controllers;
 
 import com.example.demo.dto.AgreementDTO;
-import com.example.demo.dto.StatisticDTO;
-import com.example.demo.entity.Agreement;
+import com.example.demo.dto.NewAgreementDTO;
 import com.example.demo.service.AgreementService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -33,14 +30,14 @@ public class AgreementController {
 
     /**
      * Добавляет новый договор
-     * @param agreement новый договор
+     * @param newAgreementDTO новый договор
      * @return добавленный договор
      */
     @RequestMapping(value = "/agreements", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity addAgreements(@RequestBody Agreement agreement)  {
+    public ResponseEntity addAgreements(@RequestBody NewAgreementDTO newAgreementDTO)  {
         logger.info("POST ../rest/agreements");
-        AgreementDTO result = agreementService.addAgreement(agreement);
+        AgreementDTO result = agreementService.addAgreement(newAgreementDTO);
         if (result != null) {
             return new ResponseEntity(result, HttpStatus.CREATED);
         } else {

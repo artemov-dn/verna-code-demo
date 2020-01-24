@@ -1,9 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.AgreementDTO;
-import com.example.demo.dto.StatisticDTO;
-import com.example.demo.entity.Agreement;
-import org.junit.jupiter.api.Assertions;
+import com.example.demo.dto.NewAgreementDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -15,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
-class AgreementServiceTest {
+class NewAgreementDTOServiceTest {
 
     @Test
     void addNullAgreement() {
@@ -28,24 +26,24 @@ class AgreementServiceTest {
     @Test
     void addAgreementWithNullProperty() {
         AgreementService agreementService = new AgreementService();
-        Agreement agreement = new Agreement();
-        agreement.setClientId(null);
-        agreement.setProductId(12);
-        agreement.setAmount(new BigDecimal("112.34"));
-        agreement.setStartDate(new Date(1579564800L * 1000));// "2020-01-21"
-        AgreementDTO actual = agreementService.addAgreement(agreement);
+        NewAgreementDTO newAgreementDTO = new NewAgreementDTO();
+        newAgreementDTO.setClientId(null);
+        newAgreementDTO.setProductId(12);
+        newAgreementDTO.setAmount(new BigDecimal("112.34"));
+        newAgreementDTO.setStartDate(new Date(1579564800L * 1000));// "2020-01-21"
+        AgreementDTO actual = agreementService.addAgreement(newAgreementDTO);
         assertNull(actual);
-        agreement.setClientId(11);
-        agreement.setProductId(null);
-        actual = agreementService.addAgreement(agreement);
+        newAgreementDTO.setClientId(11);
+        newAgreementDTO.setProductId(null);
+        actual = agreementService.addAgreement(newAgreementDTO);
         assertNull(actual);
-        agreement.setProductId(12);
-        agreement.setAmount(null);
-        actual = agreementService.addAgreement(agreement);
+        newAgreementDTO.setProductId(12);
+        newAgreementDTO.setAmount(null);
+        actual = agreementService.addAgreement(newAgreementDTO);
         assertNull(actual);
-        agreement.setAmount(new BigDecimal("112.34"));
-        agreement.setStartDate(null);// "2020-01-21"
-        actual = agreementService.addAgreement(agreement);
+        newAgreementDTO.setAmount(new BigDecimal("112.34"));
+        newAgreementDTO.setStartDate(null);// "2020-01-21"
+        actual = agreementService.addAgreement(newAgreementDTO);
         assertNull(actual);
     }
 
@@ -53,15 +51,15 @@ class AgreementServiceTest {
     @Test
     void addAgreementWithNegativeOrZeroAmount() {
         AgreementService agreementService = new AgreementService();
-        Agreement agreement = new Agreement();
-        agreement.setClientId(11);
-        agreement.setProductId(12);
-        agreement.setStartDate(new Date(1579564800L * 1000));// "2020-01-21"
-        agreement.setAmount(new BigDecimal("0"));
-        AgreementDTO actual = agreementService.addAgreement(agreement);
+        NewAgreementDTO newAgreementDTO = new NewAgreementDTO();
+        newAgreementDTO.setClientId(11);
+        newAgreementDTO.setProductId(12);
+        newAgreementDTO.setStartDate(new Date(1579564800L * 1000));// "2020-01-21"
+        newAgreementDTO.setAmount(new BigDecimal("0"));
+        AgreementDTO actual = agreementService.addAgreement(newAgreementDTO);
         assertNull(actual);
-        agreement.setAmount(new BigDecimal("-100"));
-        actual = agreementService.addAgreement(agreement);
+        newAgreementDTO.setAmount(new BigDecimal("-100"));
+        actual = agreementService.addAgreement(newAgreementDTO);
         assertNull(actual);
     }
 
@@ -69,18 +67,18 @@ class AgreementServiceTest {
     @Test
     void addAgreement() {
         AgreementService agreementService = new AgreementService();
-        Agreement agreement = new Agreement();
-        agreement.setClientId(11);
-        agreement.setProductId(12);
-        agreement.setAmount(new BigDecimal("112.34"));
-        agreement.setStartDate(new Date(1579564800L * 1000));// "2020-01-21"
+        NewAgreementDTO newAgreementDTO = new NewAgreementDTO();
+        newAgreementDTO.setClientId(11);
+        newAgreementDTO.setProductId(12);
+        newAgreementDTO.setAmount(new BigDecimal("112.34"));
+        newAgreementDTO.setStartDate(new Date(1579564800L * 1000));// "2020-01-21"
 
         List<AgreementDTO> actualList = agreementService.getAgreements(null, null);
         assertNotNull(actualList);
         assertEquals(0, actualList.size());
 
         long expected_now = Calendar.getInstance().getTime().getTime();
-        AgreementDTO actual = agreementService.addAgreement(agreement);
+        AgreementDTO actual = agreementService.addAgreement(newAgreementDTO);
 
         assertEquals(1, actual.getAgreementId());
         assertEquals(11,actual.getClientId());
@@ -107,18 +105,18 @@ class AgreementServiceTest {
     void getAgreements() {
         AgreementService agreementService = new AgreementService();
 
-        Agreement agreement = new Agreement();
-        agreement.setClientId(1);
-        agreement.setProductId(1);
-        agreement.setAmount(new BigDecimal("202.55"));
-        agreement.setStartDate(new Date(1579910400L * 1000));// "2020-01-21"
-        agreementService.addAgreement(agreement);
-        agreement.setClientId(2);
-        agreementService.addAgreement(agreement);
-        agreement.setProductId(3);
-        agreementService.addAgreement(agreement);
-        agreement.setClientId(3);
-        agreementService.addAgreement(agreement);
+        NewAgreementDTO newAgreementDTO = new NewAgreementDTO();
+        newAgreementDTO.setClientId(1);
+        newAgreementDTO.setProductId(1);
+        newAgreementDTO.setAmount(new BigDecimal("202.55"));
+        newAgreementDTO.setStartDate(new Date(1579910400L * 1000));// "2020-01-21"
+        agreementService.addAgreement(newAgreementDTO);
+        newAgreementDTO.setClientId(2);
+        agreementService.addAgreement(newAgreementDTO);
+        newAgreementDTO.setProductId(3);
+        agreementService.addAgreement(newAgreementDTO);
+        newAgreementDTO.setClientId(3);
+        agreementService.addAgreement(newAgreementDTO);
 
         List<AgreementDTO> actualList = agreementService.getAgreements(null, null);
         assertEquals(4, actualList.size());
@@ -172,16 +170,16 @@ class AgreementServiceTest {
     void getAgreement() {
         AgreementService agreementService = new AgreementService();
 
-        Agreement agreement = new Agreement();
-        agreement.setClientId(21);
-        agreement.setProductId(22);
-        agreement.setAmount(new BigDecimal("202.55"));
-        agreement.setStartDate(new Date(1579910400L * 1000));// "2020-01-21"
-        agreementService.addAgreement(agreement);
-        agreement.setClientId(30);
-        agreementService.addAgreement(agreement);
-        agreement.setProductId(20);
-        agreementService.addAgreement(agreement);
+        NewAgreementDTO newAgreementDTO = new NewAgreementDTO();
+        newAgreementDTO.setClientId(21);
+        newAgreementDTO.setProductId(22);
+        newAgreementDTO.setAmount(new BigDecimal("202.55"));
+        newAgreementDTO.setStartDate(new Date(1579910400L * 1000));// "2020-01-21"
+        agreementService.addAgreement(newAgreementDTO);
+        newAgreementDTO.setClientId(30);
+        agreementService.addAgreement(newAgreementDTO);
+        newAgreementDTO.setProductId(20);
+        agreementService.addAgreement(newAgreementDTO);
 
         AgreementDTO actual = agreementService.getAgreement(2);
 
@@ -213,16 +211,16 @@ class AgreementServiceTest {
     void deleteAgreement() {
         AgreementService agreementService = new AgreementService();
 
-        Agreement agreement = new Agreement();
-        agreement.setClientId(21);
-        agreement.setProductId(22);
-        agreement.setAmount(new BigDecimal("202.55"));
-        agreement.setStartDate(new Date(1579910400L * 1000));// "2020-01-21"
-        agreementService.addAgreement(agreement);
-        agreement.setClientId(10);
-        agreementService.addAgreement(agreement);
-        agreement.setClientId(15);
-        agreementService.addAgreement(agreement);
+        NewAgreementDTO newAgreementDTO = new NewAgreementDTO();
+        newAgreementDTO.setClientId(21);
+        newAgreementDTO.setProductId(22);
+        newAgreementDTO.setAmount(new BigDecimal("202.55"));
+        newAgreementDTO.setStartDate(new Date(1579910400L * 1000));// "2020-01-21"
+        agreementService.addAgreement(newAgreementDTO);
+        newAgreementDTO.setClientId(10);
+        agreementService.addAgreement(newAgreementDTO);
+        newAgreementDTO.setClientId(15);
+        agreementService.addAgreement(newAgreementDTO);
 
         List<AgreementDTO> actualList = agreementService.getAgreements(null, null);
         assertEquals(3, actualList.size());
@@ -259,17 +257,17 @@ class AgreementServiceTest {
         AgreementService agreementService = new AgreementService();
         ExecutorService executorService =
                 Executors.newFixedThreadPool(4);
-        Agreement agreement = new Agreement();
-        agreement.setClientId(21);
-        agreement.setProductId(22);
-        agreement.setAmount(new BigDecimal("1"));
-        agreement.setStartDate(new Date(1579910400L * 1000));// "2020-01-21"
+        NewAgreementDTO newAgreementDTO = new NewAgreementDTO();
+        newAgreementDTO.setClientId(21);
+        newAgreementDTO.setProductId(22);
+        newAgreementDTO.setAmount(new BigDecimal("1"));
+        newAgreementDTO.setStartDate(new Date(1579910400L * 1000));// "2020-01-21"
         long startTime = System.nanoTime();
         for (int i = 0; i < 4; i++) {
             executorService.execute(() -> {
                 for (int j = 0; j < 500__000; j++) {
-                    agreement.setProductId(ThreadLocalRandom.current().nextInt(5));
-                    agreementService.addAgreement(agreement);
+                    newAgreementDTO.setProductId(ThreadLocalRandom.current().nextInt(5));
+                    agreementService.addAgreement(newAgreementDTO);
                 }
             });
         }
@@ -283,8 +281,8 @@ class AgreementServiceTest {
 
         Future addFuture = executorService.submit(() -> {
             for (int j = 0; j < 500__000; j++) {
-                agreement.setProductId(ThreadLocalRandom.current().nextInt(5));
-                agreementService.addAgreement(agreement);
+                newAgreementDTO.setProductId(ThreadLocalRandom.current().nextInt(5));
+                agreementService.addAgreement(newAgreementDTO);
             }
         });
          Future delFuture = executorService.submit(() -> {

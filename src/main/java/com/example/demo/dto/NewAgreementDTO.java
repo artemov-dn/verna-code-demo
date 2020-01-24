@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.example.demo.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * Created by den on 21.01.20.
  */
-public class Agreement {
+public class NewAgreementDTO {
     private Integer clientId;
     private Integer productId;
     private BigDecimal amount;
