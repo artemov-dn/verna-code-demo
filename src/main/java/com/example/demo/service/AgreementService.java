@@ -31,10 +31,8 @@ public class AgreementService {
      * @param newAgreementDTO новый договор
      * @return добавленный договор
      */
-    public AgreementDTO addAgreement(NewAgreementDTO newAgreementDTO){
-        if (newAgreementDTO != null && newAgreementDTO.getClientId() != null && newAgreementDTO.getProductId() != null &&
-                newAgreementDTO.getAmount() != null && newAgreementDTO.getStartDate() != null &&
-                newAgreementDTO.getAmount().compareTo(new BigDecimal(0)) > 0) {
+    public AgreementDTO addAgreement(NewAgreementDTO newAgreementDTO) throws Exception{
+        if (newAgreementDTO != null) {
             AgreementDTO result = new AgreementDTO.Builder()
                     .agreementId(LastAgreementId.addAndGet(1))
                     .clientId(newAgreementDTO.getClientId())
@@ -46,7 +44,7 @@ public class AgreementService {
             agreements.put(result.getAgreementId(), result);
             return result;
         } else {
-            return null;
+            throw new Exception("Ошибка добавления. Договор пуст.");
         }
     }
 
@@ -57,15 +55,15 @@ public class AgreementService {
      * @param productId ИД продукта, по которому нужно отфильтровать договора
      * @return список договоров
      */
-    public List<AgreementDTO> getAgreements(Integer clientId, Integer productId){
-        if (clientId == null && productId == null) {
-            return new ArrayList<AgreementDTO>(agreements.values());
-        } else {
-            return agreements.values().parallelStream()
-                    .filter(dto -> (clientId == null || dto.getClientId().equals(clientId)))
-                    .filter(dto -> (productId == null || dto.getProductId().equals(productId)))
-                    .collect(Collectors.toList());
+    public List<AgreementDTO> getAgreements(Integer clientId, Integer productId) {
+        Stream<AgreementDTO> stream = agreements.values().parallelStream();
+        if (clientId != null) {
+            stream = stream.filter(dto -> (dto.getClientId().equals(clientId)));
         }
+        if (productId != null) {
+            stream = stream.filter(dto -> (dto.getProductId().equals(productId)));
+        }
+        return stream.collect(Collectors.toList());
     }
 
 

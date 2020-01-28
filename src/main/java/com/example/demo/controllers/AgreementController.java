@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -35,14 +36,15 @@ public class AgreementController {
      */
     @RequestMapping(value = "/agreements", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity addAgreements(@RequestBody NewAgreementDTO newAgreementDTO)  {
+    public ResponseEntity addAgreement(@RequestBody NewAgreementDTO newAgreementDTO) throws Exception {
         logger.info("POST ../rest/agreements");
-        AgreementDTO result = agreementService.addAgreement(newAgreementDTO);
-        if (result != null) {
+        if (newAgreementDTO != null && newAgreementDTO.getClientId() != null && newAgreementDTO.getProductId() != null &&
+                newAgreementDTO.getAmount() != null && newAgreementDTO.getStartDate() != null &&
+                newAgreementDTO.getAmount().compareTo(new BigDecimal(0)) > 0) {
+            AgreementDTO result = agreementService.addAgreement(newAgreementDTO);
             return new ResponseEntity(result, HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
 

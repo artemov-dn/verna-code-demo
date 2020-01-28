@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.AgreementDTO;
 import com.example.demo.dto.NewAgreementDTO;
+import com.example.demo.dto.StatisticDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -13,59 +14,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
-class NewAgreementDTOServiceTest {
+class AgreementServiceTest {
 
     @Test
-    void addNullAgreement() {
+    void addNullAgreement() throws Exception {
         AgreementService agreementService = new AgreementService();
-        AgreementDTO actual = agreementService.addAgreement(null);
-        assertNull(actual);
+        assertThrows(Exception.class, () -> agreementService.addAgreement(null));
     }
 
 
     @Test
-    void addAgreementWithNullProperty() {
-        AgreementService agreementService = new AgreementService();
-        NewAgreementDTO newAgreementDTO = new NewAgreementDTO();
-        newAgreementDTO.setClientId(null);
-        newAgreementDTO.setProductId(12);
-        newAgreementDTO.setAmount(new BigDecimal("112.34"));
-        newAgreementDTO.setStartDate(new Date(1579564800L * 1000));// "2020-01-21"
-        AgreementDTO actual = agreementService.addAgreement(newAgreementDTO);
-        assertNull(actual);
-        newAgreementDTO.setClientId(11);
-        newAgreementDTO.setProductId(null);
-        actual = agreementService.addAgreement(newAgreementDTO);
-        assertNull(actual);
-        newAgreementDTO.setProductId(12);
-        newAgreementDTO.setAmount(null);
-        actual = agreementService.addAgreement(newAgreementDTO);
-        assertNull(actual);
-        newAgreementDTO.setAmount(new BigDecimal("112.34"));
-        newAgreementDTO.setStartDate(null);// "2020-01-21"
-        actual = agreementService.addAgreement(newAgreementDTO);
-        assertNull(actual);
-    }
-
-
-    @Test
-    void addAgreementWithNegativeOrZeroAmount() {
-        AgreementService agreementService = new AgreementService();
-        NewAgreementDTO newAgreementDTO = new NewAgreementDTO();
-        newAgreementDTO.setClientId(11);
-        newAgreementDTO.setProductId(12);
-        newAgreementDTO.setStartDate(new Date(1579564800L * 1000));// "2020-01-21"
-        newAgreementDTO.setAmount(new BigDecimal("0"));
-        AgreementDTO actual = agreementService.addAgreement(newAgreementDTO);
-        assertNull(actual);
-        newAgreementDTO.setAmount(new BigDecimal("-100"));
-        actual = agreementService.addAgreement(newAgreementDTO);
-        assertNull(actual);
-    }
-
-
-    @Test
-    void addAgreement() {
+    void addAgreement() throws Exception {
         AgreementService agreementService = new AgreementService();
         NewAgreementDTO newAgreementDTO = new NewAgreementDTO();
         newAgreementDTO.setClientId(11);
@@ -102,7 +61,7 @@ class NewAgreementDTOServiceTest {
 
 
     @Test
-    void getAgreements() {
+    void getAgreements() throws Exception {
         AgreementService agreementService = new AgreementService();
 
         NewAgreementDTO newAgreementDTO = new NewAgreementDTO();
@@ -167,7 +126,7 @@ class NewAgreementDTOServiceTest {
 
 
     @Test
-    void getAgreement() {
+    void getAgreement() throws Exception  {
         AgreementService agreementService = new AgreementService();
 
         NewAgreementDTO newAgreementDTO = new NewAgreementDTO();
@@ -208,7 +167,7 @@ class NewAgreementDTOServiceTest {
 
 
     @Test
-    void deleteAgreement() {
+    void deleteAgreement() throws Exception  {
         AgreementService agreementService = new AgreementService();
 
         NewAgreementDTO newAgreementDTO = new NewAgreementDTO();
@@ -253,7 +212,7 @@ class NewAgreementDTOServiceTest {
 
 
     @Test
-    void getStatNotThrowException()throws InterruptedException  {
+    void getStatNotThrowException()throws InterruptedException, Exception   {
         AgreementService agreementService = new AgreementService();
         ExecutorService executorService =
                 Executors.newFixedThreadPool(4);
@@ -267,7 +226,11 @@ class NewAgreementDTOServiceTest {
             executorService.execute(() -> {
                 for (int j = 0; j < 500__000; j++) {
                     newAgreementDTO.setProductId(ThreadLocalRandom.current().nextInt(5));
-                    agreementService.addAgreement(newAgreementDTO);
+                    try {
+                        agreementService.addAgreement(newAgreementDTO);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }
@@ -282,7 +245,11 @@ class NewAgreementDTOServiceTest {
         Future addFuture = executorService.submit(() -> {
             for (int j = 0; j < 500__000; j++) {
                 newAgreementDTO.setProductId(ThreadLocalRandom.current().nextInt(5));
-                agreementService.addAgreement(newAgreementDTO);
+                try {
+                    agreementService.addAgreement(newAgreementDTO);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
          Future delFuture = executorService.submit(() -> {
@@ -299,6 +266,87 @@ class NewAgreementDTOServiceTest {
         assertDoesNotThrow(() -> addFuture.get());
         assertDoesNotThrow(() -> delFuture.get());
         assertDoesNotThrow(() -> statFuture.get());
+    }
+
+    @Test
+    void getStatistics() throws Exception {
+        AgreementService agreementService = new AgreementService();
+
+        NewAgreementDTO newAgreementDTO = new NewAgreementDTO();
+        newAgreementDTO.setClientId(1);
+        newAgreementDTO.setProductId(1);
+        newAgreementDTO.setAmount(new BigDecimal("202.55"));
+        newAgreementDTO.setStartDate(new Date(1579910400L * 1000));// "2020-01-21"
+        agreementService.addAgreement(newAgreementDTO);
+        newAgreementDTO.setClientId(2);
+        newAgreementDTO.setAmount(new BigDecimal("102.05"));
+        agreementService.addAgreement(newAgreementDTO);
+        newAgreementDTO.setProductId(3);
+        agreementService.addAgreement(newAgreementDTO);
+        newAgreementDTO.setClientId(3);
+        newAgreementDTO.setAmount(new BigDecimal("310"));
+        agreementService.addAgreement(newAgreementDTO);
+
+        StatisticDTO actual = agreementService.getStatistics(null, null);
+        assertEquals(4, actual.getCount());
+        assertEquals(new BigDecimal("102.05"), actual.getMinAmount());
+        assertEquals(new BigDecimal("310"), actual.getMaxAmount());
+        assertEquals(new BigDecimal("716.65"), actual.getSum());
+
+        actual = agreementService.getStatistics(1, null);
+        assertEquals(1, actual.getCount());
+        assertEquals(new BigDecimal("202.55"), actual.getMinAmount());
+        assertEquals(new BigDecimal("202.55"), actual.getMaxAmount());
+        assertEquals(new BigDecimal("202.55"), actual.getSum());
+
+        actual = agreementService.getStatistics(2, null);
+        assertEquals(2, actual.getCount());
+        assertEquals(new BigDecimal("102.05"), actual.getMinAmount());
+        assertEquals(new BigDecimal("102.05"), actual.getMaxAmount());
+        assertEquals(new BigDecimal("204.10"), actual.getSum());
+
+        actual = agreementService.getStatistics(null, 1);
+        assertEquals(2, actual.getCount());
+        assertEquals(new BigDecimal("102.05"), actual.getMinAmount());
+        assertEquals(new BigDecimal("202.55"), actual.getMaxAmount());
+        assertEquals(new BigDecimal("304.60"), actual.getSum());
+
+        actual = agreementService.getStatistics(2, 3);
+        assertEquals(1, actual.getCount());
+        assertEquals(new BigDecimal("102.05"), actual.getMinAmount());
+        assertEquals(new BigDecimal("102.05"), actual.getMaxAmount());
+        assertEquals(new BigDecimal("102.05"), actual.getSum());
+
+        actual = agreementService.getStatistics(1, 3);
+        assertNotNull(actual);
+        assertEquals(0, actual.getCount());
+        assertEquals(new BigDecimal("0"), actual.getMinAmount());
+        assertEquals(new BigDecimal("0"), actual.getMaxAmount());
+        assertEquals(new BigDecimal("0"), actual.getSum());
+
+        actual = agreementService.getStatistics(1, 3);
+        assertNotNull(actual);
+        assertEquals(0, actual.getCount());
+
+        actual = agreementService.getStatistics(1, 6);
+        assertNotNull(actual);
+        assertEquals(0, actual.getCount());
+
+        actual = agreementService.getStatistics(10, 3);
+        assertNotNull(actual);
+        assertEquals(0, actual.getCount());
+
+        actual = agreementService.getStatistics(10, 6);
+        assertNotNull(actual);
+        assertEquals(0, actual.getCount());
+
+        actual = agreementService.getStatistics(-10, null);
+        assertNotNull(actual);
+        assertEquals(0, actual.getCount());
+
+        actual = agreementService.getStatistics(null, -6);
+        assertNotNull(actual);
+        assertEquals(0, actual.getCount());
     }
 
 }
