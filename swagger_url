@@ -1,2 +1,7 @@
+Swagger2
 http://localhost:7080/v2/api-docs
 http://localhost:7080/swagger-ui.html#/
+
+OpenAPI
+http://localhost:7080/v3/api-docs
+http://localhost:7080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/
