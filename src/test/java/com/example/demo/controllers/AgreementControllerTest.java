@@ -77,9 +77,11 @@ class AgreementControllerTest {
     @Test
     void getAgreements() throws Exception {
         List<AgreementDTO> items = new ArrayList<>();
-        Mockito.when(agreementService.getAgreements(any(),any())).thenReturn(items);
+        Mockito.when(agreementService.getAgreements(anyInt(),anyInt())).thenReturn(items);
         mockMvc.perform(MockMvcRequestBuilders.get("/rest/agreements?clientId=211&productId=212"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get("/rest/agreements?clientId=jg4g&productId=212"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
 

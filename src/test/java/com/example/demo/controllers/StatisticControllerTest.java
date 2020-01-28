@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 
 @WebMvcTest(StatisticController.class)
 public class StatisticControllerTest {
@@ -35,8 +35,10 @@ public class StatisticControllerTest {
                 .maxAmount(new BigDecimal("0"))
                 .sum(new BigDecimal("0"))
                 .build();
-        Mockito.when(agreementService.getStatistics(any(),any())).thenReturn(items);
+        Mockito.when(agreementService.getStatistics(anyInt(),anyInt())).thenReturn(items);
         mockMvc.perform(MockMvcRequestBuilders.get("/rest/statistics?clientId=211&productId=212"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get("/rest/statistics?clientId=abc&productId=212"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }
