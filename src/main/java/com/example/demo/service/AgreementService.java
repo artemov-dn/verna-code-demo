@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import com.example.demo.dto.AgreementDTO;
 import com.example.demo.dto.StatisticDTO;
-import com.example.demo.dto.NewAgreementDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -31,7 +30,7 @@ public class AgreementService {
      * @param newAgreementDTO новый договор
      * @return добавленный договор
      */
-    public AgreementDTO addAgreement(NewAgreementDTO newAgreementDTO) throws Exception{
+    public AgreementDTO addAgreement(AgreementDTO newAgreementDTO) throws Exception{
         if (newAgreementDTO != null) {
             AgreementDTO result = new AgreementDTO.Builder()
                     .agreementId(LastAgreementId.addAndGet(1))
@@ -44,7 +43,7 @@ public class AgreementService {
             agreements.put(result.getAgreementId(), result);
             return result;
         } else {
-            throw new Exception("Ошибка добавления. Договор пуст.");
+            throw new Exception("Ошибка добавления. Новый договор пуст.");
         }
     }
 

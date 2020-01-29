@@ -1,7 +1,6 @@
 package com.example.demo.controllers;
 
 import com.example.demo.dto.AgreementDTO;
-import com.example.demo.dto.NewAgreementDTO;
 import com.example.demo.service.AgreementService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +35,7 @@ public class AgreementController {
      */
     @RequestMapping(value = "/agreements", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity addAgreement(@RequestBody NewAgreementDTO newAgreementDTO) throws Exception {
+    public ResponseEntity addAgreement(@RequestBody AgreementDTO newAgreementDTO) throws Exception {
         logger.info("POST ../rest/agreements");
         if (newAgreementDTO != null && newAgreementDTO.getClientId() != null && newAgreementDTO.getProductId() != null &&
                 newAgreementDTO.getAmount() != null && newAgreementDTO.getStartDate() != null &&

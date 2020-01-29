@@ -3,6 +3,8 @@ package com.example.demo.dto;
 import com.example.demo.serializer.CustomBigDecimalSerializer;
 import com.example.demo.serializer.CustomDateSerializer;
 import com.example.demo.serializer.CustomDateTimeSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.math.BigDecimal;
@@ -16,6 +18,7 @@ import java.util.Date;
 /**
  * Created by den on 21.01.20.
  */
+@JsonDeserialize(builder = AgreementDTO.Builder.class)
 public class AgreementDTO {
     private final Integer agreementId;
     private final Integer clientId;
@@ -58,6 +61,7 @@ public class AgreementDTO {
         return timestamp;
     }
 
+    @JsonPOJOBuilder(withPrefix = "")
     public static class Builder {
         private Integer agreementId;
         private Integer clientId;
@@ -66,32 +70,32 @@ public class AgreementDTO {
         private Date startDate;
         private Date timestamp;
 
-        public AgreementDTO.Builder agreementId(Integer agreemenId) {
+        public Builder agreementId(Integer agreemenId) {
             this.agreementId = agreemenId;
             return this;
         }
 
-        public AgreementDTO.Builder clientId(Integer clientId) {
+        public Builder clientId(Integer clientId) {
             this.clientId = clientId;
             return this;
         }
 
-        public AgreementDTO.Builder productId(Integer productId) {
+        public Builder productId(Integer productId) {
             this.productId = productId;
             return this;
         }
 
-        public AgreementDTO.Builder amount(BigDecimal amount) {
+        public Builder amount(BigDecimal amount) {
             this.amount = amount;
             return this;
         }
 
-        public AgreementDTO.Builder startDate(Date startDate) {
+        public Builder startDate(Date startDate) {
             this.startDate = startDate;
             return this;
         }
 
-        public AgreementDTO.Builder timestamp(Date timestamp) {
+        public Builder timestamp(Date timestamp) {
             this.timestamp = timestamp;
             return this;
         }

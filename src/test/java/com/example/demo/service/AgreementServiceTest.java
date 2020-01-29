@@ -1,13 +1,14 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.AgreementDTO;
-import com.example.demo.dto.NewAgreementDTO;
 import com.example.demo.dto.StatisticDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,11 +27,11 @@ class AgreementServiceTest {
     @Test
     void addAgreement() throws Exception {
         AgreementService agreementService = new AgreementService();
-        NewAgreementDTO newAgreementDTO = new NewAgreementDTO();
-        newAgreementDTO.setClientId(11);
-        newAgreementDTO.setProductId(12);
-        newAgreementDTO.setAmount(new BigDecimal("112.34"));
-        newAgreementDTO.setStartDate(new Date(1579564800L * 1000));// "2020-01-21"
+        AgreementDTO newAgreementDTO = new AgreementDTO.Builder()
+                .clientId(11).productId(12)
+                .amount(new BigDecimal("112.34")).startDate(new Date(1579564800L * 1000))  // "2020-01-21"
+                .build();
+
 
         List<AgreementDTO> actualList = agreementService.getAgreements(null, null);
         assertNotNull(actualList);
@@ -64,18 +65,23 @@ class AgreementServiceTest {
     void getAgreements() throws Exception {
         AgreementService agreementService = new AgreementService();
 
-        NewAgreementDTO newAgreementDTO = new NewAgreementDTO();
-        newAgreementDTO.setClientId(1);
-        newAgreementDTO.setProductId(1);
-        newAgreementDTO.setAmount(new BigDecimal("202.55"));
-        newAgreementDTO.setStartDate(new Date(1579910400L * 1000));// "2020-01-21"
+        AgreementDTO newAgreementDTO = new AgreementDTO.Builder()
+                .clientId(1).productId(1)
+                .amount(new BigDecimal("202.55")).startDate(new Date(1579910400L * 1000))  // "2020-01-21"
+                .build();
         agreementService.addAgreement(newAgreementDTO);
-        newAgreementDTO.setClientId(2);
-        agreementService.addAgreement(newAgreementDTO);
-        newAgreementDTO.setProductId(3);
-        agreementService.addAgreement(newAgreementDTO);
-        newAgreementDTO.setClientId(3);
-        agreementService.addAgreement(newAgreementDTO);
+        newAgreementDTO = new AgreementDTO.Builder()
+                .clientId(2).productId(1)
+                .amount(new BigDecimal("202.55")).startDate(new Date(1579910400L * 1000))  // "2020-01-21"
+                .build();        agreementService.addAgreement(newAgreementDTO);
+        newAgreementDTO = new AgreementDTO.Builder()
+                .clientId(2).productId(3)
+                .amount(new BigDecimal("202.55")).startDate(new Date(1579910400L * 1000))  // "2020-01-21"
+                .build();        agreementService.addAgreement(newAgreementDTO);
+        newAgreementDTO = new AgreementDTO.Builder()
+                .clientId(3).productId(3)
+                .amount(new BigDecimal("202.55")).startDate(new Date(1579910400L * 1000))  // "2020-01-21"
+                .build();        agreementService.addAgreement(newAgreementDTO);
 
         List<AgreementDTO> actualList = agreementService.getAgreements(null, null);
         assertEquals(4, actualList.size());
@@ -129,15 +135,20 @@ class AgreementServiceTest {
     void getAgreement() throws Exception  {
         AgreementService agreementService = new AgreementService();
 
-        NewAgreementDTO newAgreementDTO = new NewAgreementDTO();
-        newAgreementDTO.setClientId(21);
-        newAgreementDTO.setProductId(22);
-        newAgreementDTO.setAmount(new BigDecimal("202.55"));
-        newAgreementDTO.setStartDate(new Date(1579910400L * 1000));// "2020-01-21"
+        AgreementDTO newAgreementDTO = new AgreementDTO.Builder()
+                .clientId(21).productId(22)
+                .amount(new BigDecimal("202.55")).startDate(new Date(1579910400L * 1000))  // "2020-01-21"
+                .build();
         agreementService.addAgreement(newAgreementDTO);
-        newAgreementDTO.setClientId(30);
+        newAgreementDTO = new AgreementDTO.Builder()
+                .clientId(30).productId(22)
+                .amount(new BigDecimal("202.55")).startDate(new Date(1579910400L * 1000))  // "2020-01-21"
+                .build();
         agreementService.addAgreement(newAgreementDTO);
-        newAgreementDTO.setProductId(20);
+        newAgreementDTO = new AgreementDTO.Builder()
+                .clientId(20).productId(22)
+                .amount(new BigDecimal("202.55")).startDate(new Date(1579910400L * 1000))  // "2020-01-21"
+                .build();
         agreementService.addAgreement(newAgreementDTO);
 
         AgreementDTO actual = agreementService.getAgreement(2);
@@ -169,16 +180,20 @@ class AgreementServiceTest {
     @Test
     void deleteAgreement() throws Exception  {
         AgreementService agreementService = new AgreementService();
-
-        NewAgreementDTO newAgreementDTO = new NewAgreementDTO();
-        newAgreementDTO.setClientId(21);
-        newAgreementDTO.setProductId(22);
-        newAgreementDTO.setAmount(new BigDecimal("202.55"));
-        newAgreementDTO.setStartDate(new Date(1579910400L * 1000));// "2020-01-21"
+        AgreementDTO newAgreementDTO = new AgreementDTO.Builder()
+                .clientId(21).productId(22)
+                .amount(new BigDecimal("202.55")).startDate(new Date(1579910400L * 1000))  // "2020-01-21"
+                .build();
         agreementService.addAgreement(newAgreementDTO);
-        newAgreementDTO.setClientId(10);
+        newAgreementDTO = new AgreementDTO.Builder()
+                .clientId(10).productId(22)
+                .amount(new BigDecimal("202.55")).startDate(new Date(1579910400L * 1000))  // "2020-01-21"
+                .build();
         agreementService.addAgreement(newAgreementDTO);
-        newAgreementDTO.setClientId(15);
+        newAgreementDTO = new AgreementDTO.Builder()
+                .clientId(15).productId(22)
+                .amount(new BigDecimal("202.55")).startDate(new Date(1579910400L * 1000))  // "2020-01-21"
+                .build();
         agreementService.addAgreement(newAgreementDTO);
 
         List<AgreementDTO> actualList = agreementService.getAgreements(null, null);
@@ -216,16 +231,14 @@ class AgreementServiceTest {
         AgreementService agreementService = new AgreementService();
         ExecutorService executorService =
                 Executors.newFixedThreadPool(4);
-        NewAgreementDTO newAgreementDTO = new NewAgreementDTO();
-        newAgreementDTO.setClientId(21);
-        newAgreementDTO.setProductId(22);
-        newAgreementDTO.setAmount(new BigDecimal("1"));
-        newAgreementDTO.setStartDate(new Date(1579910400L * 1000));// "2020-01-21"
         long startTime = System.nanoTime();
         for (int i = 0; i < 4; i++) {
             executorService.execute(() -> {
                 for (int j = 0; j < 500__000; j++) {
-                    newAgreementDTO.setProductId(ThreadLocalRandom.current().nextInt(5));
+                    AgreementDTO newAgreementDTO = new AgreementDTO.Builder()
+                            .clientId(21).productId(ThreadLocalRandom.current().nextInt(5))
+                            .amount(new BigDecimal("1")).startDate(new Date(1579910400L * 1000))  // "2020-01-21"
+                            .build();
                     try {
                         agreementService.addAgreement(newAgreementDTO);
                     } catch (Exception e) {
@@ -244,7 +257,10 @@ class AgreementServiceTest {
 
         Future addFuture = executorService.submit(() -> {
             for (int j = 0; j < 500__000; j++) {
-                newAgreementDTO.setProductId(ThreadLocalRandom.current().nextInt(5));
+                AgreementDTO newAgreementDTO = new AgreementDTO.Builder()
+                        .clientId(21).productId(ThreadLocalRandom.current().nextInt(5))
+                        .amount(new BigDecimal("1")).startDate(new Date(1579910400L * 1000))  // "2020-01-21"
+                        .build();
                 try {
                     agreementService.addAgreement(newAgreementDTO);
                 } catch (Exception e) {
@@ -272,19 +288,21 @@ class AgreementServiceTest {
     void getStatistics() throws Exception {
         AgreementService agreementService = new AgreementService();
 
-        NewAgreementDTO newAgreementDTO = new NewAgreementDTO();
-        newAgreementDTO.setClientId(1);
-        newAgreementDTO.setProductId(1);
-        newAgreementDTO.setAmount(new BigDecimal("202.55"));
-        newAgreementDTO.setStartDate(new Date(1579910400L * 1000));// "2020-01-21"
+        AgreementDTO newAgreementDTO = new AgreementDTO.Builder()
+                .clientId(1).productId(1).amount(new BigDecimal("202.55")).startDate(new Date(1579910400L * 1000)) // "2020-01-21"
+                .build();
         agreementService.addAgreement(newAgreementDTO);
-        newAgreementDTO.setClientId(2);
-        newAgreementDTO.setAmount(new BigDecimal("102.05"));
+        newAgreementDTO = new AgreementDTO.Builder()
+                .clientId(2).productId(1).amount(new BigDecimal("102.05")).startDate(new Date(1579910400L * 1000)) // "2020-01-21"
+                .build();
         agreementService.addAgreement(newAgreementDTO);
-        newAgreementDTO.setProductId(3);
+        newAgreementDTO = new AgreementDTO.Builder()
+                .clientId(2).productId(3).amount(new BigDecimal("102.05")).startDate(new Date(1579910400L * 1000)) // "2020-01-21"
+                .build();
         agreementService.addAgreement(newAgreementDTO);
-        newAgreementDTO.setClientId(3);
-        newAgreementDTO.setAmount(new BigDecimal("310"));
+        newAgreementDTO = new AgreementDTO.Builder()
+                .clientId(3).productId(3).amount(new BigDecimal("310")).startDate(new Date(1579910400L * 1000)) // "2020-01-21"
+                .build();
         agreementService.addAgreement(newAgreementDTO);
 
         StatisticDTO actual = agreementService.getStatistics(null, null);
