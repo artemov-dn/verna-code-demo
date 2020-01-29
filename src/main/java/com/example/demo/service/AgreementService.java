@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.AgreementDTO;
 import com.example.demo.dto.StatisticDTO;
+import com.example.demo.exception.AgreementIsEmptyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class AgreementService {
      * @param newAgreementDTO новый договор
      * @return добавленный договор
      */
-    public AgreementDTO addAgreement(AgreementDTO newAgreementDTO) throws Exception{
+    public AgreementDTO addAgreement(AgreementDTO newAgreementDTO){
         if (newAgreementDTO != null) {
             AgreementDTO result = new AgreementDTO.Builder()
                     .agreementId(LastAgreementId.addAndGet(1))
@@ -43,7 +44,7 @@ public class AgreementService {
             agreements.put(result.getAgreementId(), result);
             return result;
         } else {
-            throw new Exception("Ошибка добавления. Новый договор пуст.");
+            throw new AgreementIsEmptyException();
         }
     }
 
@@ -71,11 +72,12 @@ public class AgreementService {
      * @param id  ИД договора
      * @return договор
      */
-    public AgreementDTO getAgreement(Integer id){
+    public Optional<AgreementDTO> getAgreement(Integer id){
         if (id != null) {
-            return agreements.get(id);
+//            return agreements.get(id);
+            return Optional.ofNullable(agreements.get(id));
         } else {
-            return null;
+            return Optional.ofNullable(null);
         }
     }
 
@@ -85,11 +87,12 @@ public class AgreementService {
      * @param id  ИД договора
      * @return договор
      */
-    public AgreementDTO deleteAgreement(Integer id){
+    public Optional<AgreementDTO> deleteAgreement(Integer id){
         if (id != null) {
-            return agreements.remove(id);
+//            return agreements.remove(id);
+            return Optional.ofNullable(agreements.remove(id));
         } else {
-            return null;
+            return Optional.ofNullable(null);
         }
     }
 

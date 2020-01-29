@@ -1,6 +1,10 @@
 package com.example.demo.controllers;
 
 import com.example.demo.dto.AgreementDTO;
+import com.example.demo.exception.AgreementIsEmptyException;
+import com.example.demo.exception.AgreementNotFoundException;
+import com.example.demo.exception.AgreementWithNegativeOrZeroAmount;
+import com.example.demo.exception.AgreementWithNullProperty;
 import com.example.demo.service.AgreementService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,15 +39,19 @@ public class AgreementController {
      */
     @RequestMapping(value = "/agreements", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity addAgreement(@RequestBody AgreementDTO newAgreementDTO) throws Exception {
+    public ResponseEntity addAgreement(@RequestBody AgreementDTO newAgreementDTO) {
         logger.info("POST ../rest/agreements");
         if (newAgreementDTO != null && newAgreementDTO.getClientId() != null && newAgreementDTO.getProductId() != null &&
-                newAgreementDTO.getAmount() != null && newAgreementDTO.getStartDate() != null &&
-                newAgreementDTO.getAmount().compareTo(new BigDecimal(0)) > 0) {
-            AgreementDTO result = agreementService.addAgreement(newAgreementDTO);
-            return new ResponseEntity(result, HttpStatus.CREATED);
+                newAgreementDTO.getAmount() != null && newAgreementDTO.getStartDate() != null) {
+            if (newAgreementDTO.getAmount().compareTo(new BigDecimal(0)) > 0) {
+                AgreementDTO result = agreementService.addAgreement(newAgreementDTO);
+                return new ResponseEntity(result, HttpStatus.CREATED);
+            } else {
+                throw new AgreementWithNegativeOrZeroAmount();
+            }
+        } else {
+            throw new AgreementWithNullProperty();
         }
-        return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
 
@@ -54,14 +62,10 @@ public class AgreementController {
      */
     @RequestMapping(value = "/agreements/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity getAgreement(@PathVariable("id") Integer id) {
+    public AgreementDTO getAgreement(@PathVariable("id") Integer id) {
         logger.info("GET ../rest/agreements/{}", id);
-        AgreementDTO result = agreementService.getAgreement(id);
-        if (result != null) {
-            return new ResponseEntity(result, HttpStatus.OK);
-        } else {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
+        return agreementService.getAgreement(id)
+                .orElseThrow(() -> new AgreementNotFoundException());
     }
 
 
@@ -72,14 +76,10 @@ public class AgreementController {
      */
     @RequestMapping(value = "/agreements/{id}", method = RequestMethod.DELETE)
     @ResponseBody
-    public ResponseEntity deleteAgreement(@PathVariable("id") Integer id) {
+    public AgreementDTO deleteAgreement(@PathVariable("id") Integer id) {
         logger.info("DELETE ../rest/agreements/{}", id);
-        AgreementDTO result = agreementService.deleteAgreement(id);
-        if (result != null) {
-            return new ResponseEntity(HttpStatus.OK);
-        } else {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
+        return agreementService.deleteAgreement(id)
+                .orElseThrow(() -> new AgreementNotFoundException());
     }
 
 
@@ -91,11 +91,10 @@ public class AgreementController {
      */
     @RequestMapping(value = "/agreements", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity getAgreements(@RequestParam(value = "clientId", required = false) Integer clientId,
+    public List<AgreementDTO> getAgreements(@RequestParam(value = "clientId", required = false) Integer clientId,
                                         @RequestParam(value = "productId", required = false) Integer productId) {
         logger.info("GET ../rest/agreements");
-        List<AgreementDTO> result = agreementService.getAgreements(clientId, productId);
-        return new ResponseEntity(result, HttpStatus.OK);
+        return agreementService.getAgreements(clientId, productId);
     }
 
 }

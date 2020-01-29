@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 
 @WebMvcTest(AgreementController.class)
@@ -53,7 +54,7 @@ class AgreementControllerTest {
                 .startDate(new Date(1579564800L * 1000))
                 .timestamp(new Date(1579545850L * 1000))
                 .build();
-        when(agreementService.deleteAgreement(10)).thenReturn(agreement);
+        when(agreementService.deleteAgreement(10)).thenReturn(Optional.ofNullable(agreement));
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/rest/agreements/10")
                 .accept(MediaType.APPLICATION_JSON))
@@ -107,7 +108,7 @@ class AgreementControllerTest {
                 .startDate(new Date(1579564800L * 1000))
                 .timestamp(new Date(1579545850L * 1000))
                 .build();
-        when(agreementService.getAgreement(10)).thenReturn(agreement);
+        when(agreementService.getAgreement(10)).thenReturn(Optional.ofNullable(agreement));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/rest/agreements/10")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -124,7 +125,7 @@ class AgreementControllerTest {
 
     @Test
     void getNotExistAgreement() throws Exception {
-        when(agreementService.getAgreement(10)).thenReturn(null);
+        when(agreementService.getAgreement(10)).thenReturn(Optional.ofNullable(null));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/rest/agreements/10"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());

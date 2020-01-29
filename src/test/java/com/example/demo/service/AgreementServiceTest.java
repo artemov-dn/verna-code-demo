@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -151,7 +152,7 @@ class AgreementServiceTest {
                 .build();
         agreementService.addAgreement(newAgreementDTO);
 
-        AgreementDTO actual = agreementService.getAgreement(2);
+        AgreementDTO actual = agreementService.getAgreement(2).get();
 
         assertEquals(2, actual.getAgreementId());
         assertEquals(30,actual.getClientId());
@@ -164,16 +165,20 @@ class AgreementServiceTest {
     @Test
     void getNullAgreement() {
         AgreementService agreementService = new AgreementService();
-        AgreementDTO actual = agreementService.getAgreement(null);
-        assertNull(actual);
+//        AgreementDTO actual = agreementService.getAgreement(null);
+//        assertNull(actual);
+        Boolean actual = agreementService.getAgreement(null).isPresent();
+        assertFalse(actual);
     }
 
 
     @Test
     void getZeroAgreement() {
         AgreementService agreementService = new AgreementService();
-        AgreementDTO actual = agreementService.getAgreement(0);
-        assertNull(actual);
+//        AgreementDTO actual = agreementService.getAgreement(0);
+//        assertNull(actual);
+        Boolean actual = agreementService.getAgreement(0).isPresent();
+        assertFalse(actual);
     }
 
 
@@ -198,31 +203,31 @@ class AgreementServiceTest {
 
         List<AgreementDTO> actualList = agreementService.getAgreements(null, null);
         assertEquals(3, actualList.size());
-        AgreementDTO actual = agreementService.getAgreement(2);
+        AgreementDTO actual = agreementService.getAgreement(2).get();
         assertNotNull(actual);
         assertEquals(2, actual.getAgreementId());
 
         agreementService.deleteAgreement(2);
         actualList = agreementService.getAgreements(null, null);
         assertEquals(2, actualList.size());
-        actual = agreementService.getAgreement(2);
-        assertNull(actual);
+        Boolean isPresent = agreementService.getAgreement(2).isPresent();
+        assertFalse(isPresent);
     }
 
 
     @Test
     void deleteNullAgreement() {
         AgreementService agreementService = new AgreementService();
-        AgreementDTO actual = agreementService.deleteAgreement(null);
-        assertNull(actual);
+        Boolean actual = agreementService.deleteAgreement(null).isPresent();
+        assertFalse(actual);
     }
 
 
     @Test
     void deleteZeroAgreement() {
         AgreementService agreementService = new AgreementService();
-        AgreementDTO actual = agreementService.deleteAgreement(0);
-        assertNull(actual);
+        Boolean actual = agreementService.deleteAgreement(0).isPresent();
+        assertFalse(actual);
     }
 
 
