@@ -6,6 +6,13 @@ import com.example.demo.exception.AgreementNotFoundException;
 import com.example.demo.exception.AgreementWithNegativeOrZeroAmount;
 import com.example.demo.exception.AgreementWithNullProperty;
 import com.example.demo.service.AgreementService;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +46,21 @@ public class AgreementController {
      */
     @RequestMapping(value = "/agreements", method = RequestMethod.POST)
     @ResponseBody
+    @Operation(
+            summary = "Добавить договор",
+            description = "Добавляет новый договор",
+            responses = {
+                    @ApiResponse(
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AgreementDTO.class)),
+                            responseCode = "201"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Некорректный запрос"
+                    )
+            }
+    )
+
     public ResponseEntity addAgreement(@RequestBody AgreementDTO newAgreementDTO) {
         logger.info("POST ../rest/agreements");
         if (newAgreementDTO != null && newAgreementDTO.getClientId() != null && newAgreementDTO.getProductId() != null &&
@@ -62,7 +84,22 @@ public class AgreementController {
      */
     @RequestMapping(value = "/agreements/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public AgreementDTO getAgreement(@PathVariable("id") Integer id) {
+    @Operation(
+            summary = "Найти договор по id",
+            description = "Возвращает договор по заданному id",
+            responses = {
+                    @ApiResponse(
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AgreementDTO.class)),
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Договор с заданным id не существует"
+                    )
+            }
+    )
+    public AgreementDTO getAgreement(
+            @Parameter(description = "Идентификатор договора", required = true) @PathVariable("id") Integer id) {
         logger.info("GET ../rest/agreements/{}", id);
         return agreementService.getAgreement(id)
                 .orElseThrow(() -> new AgreementNotFoundException());
@@ -76,7 +113,22 @@ public class AgreementController {
      */
     @RequestMapping(value = "/agreements/{id}", method = RequestMethod.DELETE)
     @ResponseBody
-    public AgreementDTO deleteAgreement(@PathVariable("id") Integer id) {
+    @Operation(
+            summary = "Удалить договор по id",
+            description = "Удаляет договор по заданному id",
+            responses = {
+                    @ApiResponse(
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AgreementDTO.class)),
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Договор с заданным id не существует"
+                    )
+            }
+    )
+    public AgreementDTO deleteAgreement(
+            @Parameter(description = "Идентификатор договора", required = true) @PathVariable("id") Integer id) {
         logger.info("DELETE ../rest/agreements/{}", id);
         return agreementService.deleteAgreement(id)
                 .orElseThrow(() -> new AgreementNotFoundException());
@@ -91,8 +143,19 @@ public class AgreementController {
      */
     @RequestMapping(value = "/agreements", method = RequestMethod.GET)
     @ResponseBody
-    public List<AgreementDTO> getAgreements(@RequestParam(value = "clientId", required = false) Integer clientId,
-                                        @RequestParam(value = "productId", required = false) Integer productId) {
+    @Operation(
+            summary = "Найти договора",
+            description = "Возвращает список договоров с заданными clientId и productId. Если clientId и productId не заданы, возвращает все договора.",
+            responses = {
+                    @ApiResponse(
+                            content = @Content(array = @ArraySchema(schema = @Schema(implementation = AgreementDTO.class))),
+                            responseCode = "200"
+                    )
+            }
+    )
+    public List<AgreementDTO> getAgreements(
+            @Parameter(description = "Идентификатор клиента")@RequestParam(value = "clientId", required = false) Integer clientId,
+            @Parameter(description = "Идентификатор продукта")@RequestParam(value = "productId", required = false) Integer productId) {
         logger.info("GET ../rest/agreements");
         return agreementService.getAgreements(clientId, productId);
     }

@@ -2,6 +2,7 @@ package com.example.demo.dto;
 
 import com.example.demo.serializer.CustomBigDecimalSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,18 +26,22 @@ public class StatisticDTO {
         this.sum = builder.sum;
     }
 
+    @Schema(description = "Количество договоров")
     public Integer getCount() {
         return count;
     }
 
+    @Schema(description = "Минимальная сумма договор")
     public BigDecimal getMinAmount() {
         return minAmount;
     }
 
+    @Schema(description = "Максимальная сумма договор")
     public BigDecimal getMaxAmount() {
         return maxAmount;
     }
 
+    @Schema(description = "Сумма всех договоров")
     public BigDecimal getSum() {
         return sum;
     }

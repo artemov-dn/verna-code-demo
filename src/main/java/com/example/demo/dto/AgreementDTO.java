@@ -6,7 +6,9 @@ import com.example.demo.serializer.CustomDateTimeSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -21,10 +23,14 @@ import java.util.Date;
 @JsonDeserialize(builder = AgreementDTO.Builder.class)
 public class AgreementDTO {
     private final Integer agreementId;
+    @NotBlank
     private final Integer clientId;
+    @NotBlank
     private final Integer productId;
+    @NotBlank
     @JsonSerialize(using = CustomBigDecimalSerializer.class)
     private final BigDecimal amount;
+    @NotBlank
     @JsonSerialize(using = CustomDateSerializer.class)
     private final Date startDate;
     @JsonSerialize(using = CustomDateTimeSerializer.class)
@@ -39,24 +45,30 @@ public class AgreementDTO {
         this.timestamp = builder.timestamp;
     }
 
+    @Schema(example = "3453", description = "ИД договора")
     public Integer getAgreementId() {
         return agreementId;
     }
 
+    @Schema(example = "278", description = "ИД клиента")
     public Integer getClientId() {
         return clientId;
     }
 
+    @Schema(example = "14", description = "ИД продукта")
     public Integer getProductId() {
         return productId;
     }
 
+    @Schema(example = "123.45", description = "Сумма договора. Должна быть больше ноля.")
     public BigDecimal getAmount() { return amount;   }
 
+    @Schema(description = "Дата начала действия договора")
     public Date getStartDate() {
         return startDate;
     }
 
+    @Schema(description = "Дата время создания договора")
     public Date getTimestamp() {
         return timestamp;
     }
